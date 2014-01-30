@@ -362,7 +362,8 @@ htmlparser.sanitize = function(htmlString, removalCallbacks) {
 		attributes: createArrayCallback('attributes'),
 		elements: createArrayCallback('elements'),
 		comments: createBoolCallback('comments'),
-		docTypes: createBoolCallback('docTypes')
+		docTypes: createBoolCallback('docTypes'),
+        tags: createArrayCallback('tags')
 	};
 
 	var sanitized = '', tagStack = [];
@@ -409,7 +410,7 @@ htmlparser.sanitize = function(htmlString, removalCallbacks) {
 			}
 
 			tagStack.push(name);
-			if (toRemove.elements(name)) {
+			if (toRemove.elements(name) || toRemove.tags(name)) {
 				ignoreStack.push(name);
 				return;
 			}
@@ -428,7 +429,7 @@ htmlparser.sanitize = function(htmlString, removalCallbacks) {
 			if (ignoreStack.length || toRemove.elements(name)) {
 				return;
 			}
-			sanitized += token;
+            
 		},
 
 		closeElement: function(name) {
@@ -438,7 +439,7 @@ htmlparser.sanitize = function(htmlString, removalCallbacks) {
 					ignoreStack.pop();
 				}
 			}
-			if (ignoreStack.length || toRemove.elements(name)) {
+			if (ignoreStack.length || toRemove.elements(name) || toRemove.tags(name)) {
 				return;
 			}
 			sanitized += '</' + name + '>';

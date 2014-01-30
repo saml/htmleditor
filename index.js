@@ -54,10 +54,13 @@ htmleditor.start = function(editorId, htmlId) {
     }
 
     function updateHtml(evt) {
-        goog.dom.getElement(htmlId).value = htmlparser.sanitize(editor.getCleanContents(), {
-            elements: ['style', 'font'],
+        var sanitized = htmlparser.sanitize(editor.getCleanContents(), {
+            elements: ['style'],
+            tags: ['font'],
             attributes: ['style']
         });
+        goog.dom.getElement(htmlId).value = sanitized;
+        //console.log(sanitized);
     }
 
     var viewportMonitor = new goog.dom.ViewportSizeMonitor();
