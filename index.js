@@ -6,19 +6,20 @@ goog.require('goog.dom.ViewportSizeMonitor');
 goog.require('goog.editor.Field');
 goog.require('goog.style');
 
-htmleditor.index.onWindowResize = function() {
-
-};
-
-htmleditor.index.start = function(editorId) {
-    var viewportMonitor = new goog.dom.ViewportSizeMonitor();
-    goog.events.listen(viewportMonitor, goog.events.EventType.RESIZE, function(evt) {
+htmleditor.index.start = function(editorId, htmlId) {
+    function onResize(evt) {
         var size = viewportMonitor.getSize();
-        size.width -= 10;
+        size.width = undefined;
         size.height -= 10;
         goog.style.setSize(goog.dom.getElement(editorId), size);
-    });
+        goog.style.setSize(goog.dom.getElement(htmlId), size);
+    }
+
+    var viewportMonitor = new goog.dom.ViewportSizeMonitor();
+    goog.events.listen(viewportMonitor, goog.events.EventType.RESIZE, onResize);
+    
     var editor = new goog.editor.Field(editorId);
     editor.makeEditable();
     editor.focusAndPlaceCursorAtStart();
+    onResize();
 };

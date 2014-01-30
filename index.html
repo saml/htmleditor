@@ -3,15 +3,22 @@
 <title>Hello</title>
 <style>
 #editme {
-    width: 100%;
-    height: 100%;
+    border: 1px solid;
+    float: left;
+    width: 49%;
+}
+#html {
+    border: 1px solid red;
+    float: right;
+    width: 49%;
 }
 </style>
 <body>
 <div id="editme"></div>
+<div id="html"></div>
 <script src="closure-library/closure/goog/base.js"></script>
 <script src="index.js"></script>
 <script>
-htmleditor.index.start('editme');
+htmleditor.index.start('editme', 'html');
 </script>
 </body>
