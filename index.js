@@ -1,12 +1,50 @@
-goog.provide('htmleditor.index');
+goog.provide('htmleditor');
+
+goog.addDependency('../../../htmlparser.js', ['htmlparser'], []);
 
 goog.require('goog.events');
 goog.require('goog.dom');
 goog.require('goog.dom.ViewportSizeMonitor');
 goog.require('goog.editor.Field');
 goog.require('goog.style');
+goog.require('htmlparser');
 
-htmleditor.index.start = function(editorId, htmlId) {
+/**
+</ asfsaf >
+
+htmleditor.index.sanitizeHtml = function(html) {
+
+    function Parser() {
+        var me = this;
+        var nextState = Start;
+
+        function Start(character) {
+            if (character == '<') {
+                nextState = PossibleTag; 
+            } else {
+                nextState = Start;
+            }
+        }
+
+        function PossibleTag(character) {
+            switch (character) {
+                case '/':
+                    nextState = possibleInvalidEndTag;
+                    break;
+                
+            }
+        }
+    }
+
+    var n = html.length;
+    for (var i = 0; i < n; i++) {
+        parser.process(html[i]);
+    }
+    return html;
+};
+ */
+
+htmleditor.start = function(editorId, htmlId) {
     function onResize(evt) {
         var size = viewportMonitor.getSize();
         size.width = undefined;
@@ -16,7 +54,10 @@ htmleditor.index.start = function(editorId, htmlId) {
     }
 
     function updateHtml(evt) {
-        goog.dom.getElement(htmlId).value = editor.getCleanContents();
+        goog.dom.getElement(htmlId).value = htmlparser.sanitize(editor.getCleanContents(), {
+            elements: ['style', 'font'],
+            attributes: ['style']
+        });
     }
 
     var viewportMonitor = new goog.dom.ViewportSizeMonitor();
